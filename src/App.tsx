@@ -9,7 +9,7 @@ function App() {
   const [currentItem, setCurrentItem] = useState<string>(items[phase]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const tid = setTimeout(() => {
       const newPhase = Math.floor(Math.random() * 3);
       setPhase(newPhase);
       setPeriodCount((prev) => (prev + 1) % 4);
@@ -19,6 +19,8 @@ function App() {
       }
       setKey(new Date());
     }, 1000);
+
+    return () => clearTimeout(tid);
   }, [key]);
 
   return (

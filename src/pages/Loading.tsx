@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
-import Card from '../components/Card';
 
 function Loading() {
   const [phase, setPhase] = useState<number>(0);
   const [key, setKey] = useState<Date>(new Date());
-  const [items] = useState<string[]>(['Loading', 'Nearly there', 'Processing']);
+  const [items] = useState<string[]>([
+    'Loading',
+    'Nearly there',
+    'Processing',
+    'Thinking',
+    'Generating',
+    'Almost done',
+    'Here we go',
+  ]);
   const [periodCount, setPeriodCount] = useState<number>(0);
   const [currentItem, setCurrentItem] = useState<string>(items[phase]);
-  const [flipped, setFlipped] = useState<boolean>(false);
-
-  const cardData = [
-    { name: 'A', suit: '♠' },
-    { name: '10', suit: '♥' },
-  ];
 
   useEffect(() => {
     const tid = setTimeout(() => {
-      const newPhase = Math.floor(Math.random() * 3);
+      const newPhase = Math.floor(Math.random() * items.length);
       setPhase(newPhase);
       setPeriodCount((prev) => (prev + 1) % 4);
       if (periodCount === 3) {
@@ -30,14 +31,11 @@ function Loading() {
   }, [key]);
 
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="h-full flex items-center justify-center text-xl">
       <h1>
         {currentItem}
         {'.'.repeat(periodCount)}
       </h1>
-      <button onClick={() => setFlipped(!flipped)}>Flip</button>
-      <Card cardValue={cardData[0]} flipped={flipped} />
-      <Card cardValue={cardData[1]} flipped={flipped} />
     </div>
   );
 }

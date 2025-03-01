@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'motion/react';
 
 interface CardProps {
-  flipped: boolean;
-  cardValue: {
+  data: {
     name: string;
     suit: string;
+    hidden?: boolean;
   };
 }
 
-const Card: React.FC<CardProps> = ({ cardValue, flipped }) => {
-  const { name, suit } = cardValue;
-  const color = ['♠', '♣️'].includes(suit) ? 'text-black' : 'text-red-600';
+const Card: React.FC<CardProps> = ({ data }) => {
+  const { name, suit, hidden = false } = data;
+  const color = ['♠', '♣'].includes(suit) ? 'text-black' : 'text-red-600';
   const controls = useAnimation();
 
+  // TODO - Fix grow animation getting bigger on each card
   useEffect(() => {
     const sequence = async () => {
       await controls.start({ scale: 3, transition: { duration: 0.1 } });
       await controls.start({
-        rotateY: flipped ? 180 : 0,
+        rotateY: hidden ? 0 : 180,
         transition: { duration: 0.1 },
       });
       await controls.start({ scale: 1, transition: { duration: 0.1 } });
     };
-
     sequence();
-  }, [flipped, controls]);
+  }, [hidden, controls]);
 
   return (
     <div className="relative w-40 h-56">
@@ -36,7 +36,7 @@ const Card: React.FC<CardProps> = ({ cardValue, flipped }) => {
       >
         {/* Front Side */}
         <div
-          className={`absolute inset-0 flex items-center justify-center bg-white border border-black rounded-lg shadow-lg [backface-visibility:hidden] ${color}`}
+          className={`absolute inset-0 flex items-center justify-center bg-white border border-black rounded-lg shadow-lg [backface-visibility:hidden] rotate-y-180 ${color}`}
         >
           <div className="h-full w-full flex flex-col justify-start p-2 px-3">
             <div className="flex items-center justify-start font-bold text-4xl">
@@ -51,7 +51,7 @@ const Card: React.FC<CardProps> = ({ cardValue, flipped }) => {
           </div>
         </div>
         {/* Back Side */}
-        <div className="absolute inset-0 flex items-center justify-center border rounded-lg shadow-lg [backface-visibility:hidden] rotate-y-180 checkerboard">
+        <div className="absolute inset-0 flex items-center justify-center border rounded-lg shadow-lg [backface-visibility:hidden] checkerboard">
           <p className="text-2xl text-white"></p>
         </div>
       </motion.div>

@@ -154,6 +154,36 @@ function useBlackjack() {
     }
   }, [dealerHand, dealerHit, hiddenCardRevealed]);
 
+  const initialDeal = async () => {
+    if (dealStep === 0) {
+      setDeck(initialCards);
+      setPlayerHand([]);
+      setDealerHand([]);
+      playerHit();
+      await wait(DELAY_BETWEEN_DEALS);
+      setDealStep(1);
+    } else if (dealStep === 1) {
+      dealerHit();
+      await wait(DELAY_BETWEEN_DEALS);
+      setDealStep(2);
+    } else if (dealStep === 2) {
+      playerHit();
+      await wait(DELAY_BETWEEN_DEALS);
+      setDealStep(3);
+    } else if (dealStep === 3) {
+      dealerHit();
+      await wait(DELAY_BETWEEN_DEALS);
+      setDealStep(4);
+    } else if (dealStep === 4) {
+      const dealerHasBlackjack = sumHand(dealerHand) === 21;
+      if (dealerHasBlackjack) {
+        setGameState(GameState.DealerTurn);
+      } else {
+        setGameState(GameState.PlayerTurn);
+      }
+    }
+  };
+
   // Monitor player / dealer turns
   useEffect(() => {
     if (gameState === GameState.PlayerTurn) {
@@ -168,32 +198,10 @@ function useBlackjack() {
 
   // Monitor gamestate for start / end turns
   useEffect(() => {
-    const dealCards = async () => {
-      if (dealStep === 0) {
-        setDeck(initialCards);
-        setPlayerHand([]);
-        setDealerHand([]);
-        playerHit();
-        await wait(DELAY_BETWEEN_DEALS);
-        setDealStep(1);
-      } else if (dealStep === 1) {
-        dealerHit();
-        await wait(DELAY_BETWEEN_DEALS);
-        setDealStep(2);
-      } else if (dealStep === 2) {
-        playerHit();
-        await wait(DELAY_BETWEEN_DEALS);
-        setDealStep(3);
-      } else if (dealStep === 3) {
-        dealerHit();
-        await wait(DELAY_BETWEEN_DEALS);
-        setGameState(GameState.PlayerTurn);
-      }
-    };
     // Handle initial deal and reveal here
     // Player / dealer turns handled above
     if (gameState === GameState.Initial) {
-      dealCards();
+      initialDeal();
     } else if (gameState === GameState.Reveal) {
       handleRevealWin();
     }

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Card from '../components/Card';
 import useBlackjack, { GameOutcome } from '../hooks/useBlackjack';
+import Button from '../components/Button';
 
 function Game() {
   const { playerHand, dealerHand, gameOutcome, hit, stand, reset } =
@@ -13,7 +14,7 @@ function Game() {
   }, [gameOutcome]);
 
   return (
-    <div className="h-full bg-amber-300 flex flex-col">
+    <div className="h-full bg-amber-300 flex flex-col items-center">
       <div className="h-1/3"></div>
       <div className="flex flex-grow h-full">
         <div className="h-full w-1/6"></div>
@@ -41,9 +42,9 @@ function Game() {
         </div>
         <div className="h-full w-1/6"></div>
       </div>
-      <button onClick={hit}>Hit</button>
-      <button onClick={stand}>Stand</button>
-      <button onClick={reset}>Reset</button>
+      <Button onClick={hit}>Hit</Button>
+      <Button onClick={stand}>Stand</Button>
+      <Button onClick={reset}>Reset</Button>
       <div className="h-1/3"></div>
     </div>
   );
